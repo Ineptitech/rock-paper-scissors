@@ -1,25 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
-using System.Net.Sockets;
+using System.Text;
+using System;
 using RPS;
 
 public class PlayerNetworkController : MonoBehaviour
 {
-    GameObject go;
-    Transform goT;
     byte[] packet;
-    // Start is called before the first frame update
-    void Start()
-    {
-        goT = go.transform;
-    }
+
 
     // Update is called once per frame
     void Update()
     {
-        packet = RPS.Network.EncodePacket(new Vector4(goT.position.x, goT.position.y, goT.position.z, goT.rotation.y));
-        RPS.Network.netSock.Send(packet, packet.Length, IPAddress.Broadcast, RPS.Network.PORT);
+        // the float position values need to be adapted to work in short format
+        packet = new RPS.MPlayerUpdate {
+            x = (short)(transform.position.x), 
+            y = (short)(transform.position.y),
+            z = (short)(transform.position.z),
+            r = (short)(transform.rotation.eulerAngles.y) 
+        };
+        Debug.Log($"Sending {MPlayerUpdate.Decode(packet)}");
+
+        RPS.Network.NetSock.Send(packet, packet.Length, IPAddress.Broadcast.ToString(), RPS.Network.PORT);
     }
 }
