@@ -21,27 +21,27 @@ namespace RPS
     {
         //public string MPlayerName { get; set; }
         public RPS.Caste MPlayerCaste { get; set; }
-
         public MPlayerStart(RPS.Caste caste = RPS.Caste.paper)
         {
             // MPlayerName = name;
             MPlayerCaste = caste;
         }
-
         public static implicit operator byte[] (MPlayerStart p) => new byte[] { (byte) RPS.PacketHeader.Start, (byte) p.MPlayerCaste };
     }
     public class MPlayerUpdate
     {
         public const int SCALE = 100;
-        public short x, y, z, r;
-        
+        private short x, y, z, r;
+        public MPlayerUpdate(float fx, float fy, float fz, float fr)
+        {
+            x = (short) (fx * SCALE);
+            y = (short) (fy * SCALE);
+            z = (short) (fz * SCALE);
+            r = (short) (fr * SCALE);
+        }
+
         public static implicit operator byte[](MPlayerUpdate p)
         {
-            // scale up position vals to fit them nicely into a short without losing precision
-            p.x *= SCALE;
-            p.y *= SCALE;
-            p.z *= SCALE;
-
             List<byte> l = new List<byte> { (byte)RPS.PacketHeader.Update };
             //Combine raw bytes
             foreach (short v in new short[] { p.x, p.y, p.z, p.r })

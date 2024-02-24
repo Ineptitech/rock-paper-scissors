@@ -11,13 +11,13 @@ public class NetworkSpawn : MonoBehaviour
     public GameObject MPlayerPrefab;
     private IPEndPoint mpep = new IPEndPoint(IPAddress.Any, 0);
 
-    async void Update()
+    void Update()
     {
-        await Task.Run(async () =>
+        Task.Run(async () =>
         {
-            var res = RPS.Network.NetSock.Receive(ref mpep);
-            Console.WriteLine(BitConverter.ToString(res));
-            if (res[0] == (byte)PacketHeader.Start)
+            var res = await RPS.Network.NetSock.ReceiveAsync();
+            Console.WriteLine(BitConverter.ToString(res.Buffer));
+            if (res.Buffer[0] == (byte)PacketHeader.Start)
             {
                 GameObject clone = Instantiate(MPlayerPrefab);
                 clone.GetComponent<MPlayerNetworkController>().mPlayerEP = mpep;

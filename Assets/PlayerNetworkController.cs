@@ -13,12 +13,12 @@ public class PlayerNetworkController : MonoBehaviour
     void Update()
     {
         // the float position values need to be adapted to work in short format
-        packet = new RPS.MPlayerUpdate {
-            x = (short)(transform.position.x), 
-            y = (short)(transform.position.y),
-            z = (short)(transform.position.z),
-            r = (short)(transform.rotation.eulerAngles.y) 
-        };
+        packet = new RPS.MPlayerUpdate(
+            transform.position.x, 
+            transform.position.y,
+            transform.position.z,
+            transform.rotation.eulerAngles.y
+        );
         Debug.Log($"Sending {MPlayerUpdate.Decode(packet)}");
 
         RPS.Network.NetSock.Send(packet, packet.Length, IPAddress.Broadcast.ToString(), RPS.Network.PORT);
