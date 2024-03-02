@@ -23,7 +23,7 @@ public class Collide : MonoBehaviour
     {
         Debug.Log($"Collision with {collision.gameObject}");
 
-        var comp = collision.collider.GetComponent<Collide>();
+        var comp = collision.collider.GetComponent<MPlayerNetworkController>();
         if (comp == null) return;
 
         Team colliderTeam = comp.currentTeam;

@@ -75,27 +75,34 @@ public class NetworkSpawn : MonoBehaviour
                 // Packets just need to be differentiated to prevent an infinite acknowledgement loop.
                 case PacketHeader.Start:
                     {
-                        if (MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
+                        if (!MPlayers.ContainsKey(ip))
+                        {
+                            GameObject clone = Instantiate(MPlayerPrefab);
+                            MPlayers.Add(pendingFrame.endPoint.Address, clone.GetComponent<MPlayerNetworkController>());
+                        }
 
-                        GameObject clone = Instantiate(MPlayerPrefab);
-                        MPlayers.Add(pendingFrame.endPoint.Address, clone.GetComponent<MPlayerNetworkController>());
-                        clone.GetComponent<MPlayerNetworkController>().ep = pendingFrame.endPoint;
-                        clone.GetComponent<Collide>().SetTeam((Team)pendingFrame.packet);
+                        var ply = MPlayers[ip];
+
+                        ply.ep = pendingFrame.endPoint;
+                        ply.SetTeam((Team)pendingFrame.packet);
 
                         // Transmit Start ACK
-                        byte[] netmsg = (byte[]) new MPlayerAck(playerCollide.currentTeam);
+                        byte[] netmsg = (byte[])new MPlayerAck(playerCollide.currentTeam);
                         RPS.Network.NetSock.SendToAll(netmsg);
 
                         break;
                     }
                 case PacketHeader.AckStart:
                     {
-                        if (MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
+                        if (!MPlayers.ContainsKey(ip))
+                        {
+                            GameObject clone = Instantiate(MPlayerPrefab);
+                            MPlayers.Add(pendingFrame.endPoint.Address, clone.GetComponent<MPlayerNetworkController>());
+                        }
 
-                        GameObject clone = Instantiate(MPlayerPrefab);
-                        MPlayers.Add(pendingFrame.endPoint.Address, clone.GetComponent<MPlayerNetworkController>());
-                        clone.GetComponent<MPlayerNetworkController>().ep = pendingFrame.endPoint;
-                        clone.GetComponent<Collide>().SetTeam((Team)pendingFrame.packet);
+                        var ply = MPlayers[ip];
+                        ply.ep = pendingFrame.endPoint;
+                        ply.SetTeam((Team)pendingFrame.packet);
 
                         break;
                     }

@@ -514,11 +514,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19feb786d540ed34fbeb45f42c9a48cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTeam: 1
   filter: {fileID: 157776457}
+  currentTeam: 1
   meshes:
-  - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: -2432090755550338912, guid: 7cc00ebf938398844b0f99efb3322eaa, type: 3}
+  - {fileID: -2432090755550338912, guid: 3c54b49517ee5644bae70df655eec5b5, type: 3}
   - {fileID: -2432090755550338912, guid: ab8843a741decab4a807be0d2c286b20, type: 3}
 --- !u!136 &2080174890
 CapsuleCollider:

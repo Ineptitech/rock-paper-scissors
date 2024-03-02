@@ -131,12 +131,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e4e2a8f0c3e2049a63871464da303e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cc: {fileID: 0}
   rb: {fileID: 8706015929676344697}
   filter: {fileID: 1760671183235101677}
   currentTeam: 0
   meshes:
-  - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: -2432090755550338912, guid: 7cc00ebf938398844b0f99efb3322eaa, type: 3}
+  - {fileID: -2432090755550338912, guid: 3c54b49517ee5644bae70df655eec5b5, type: 3}
   - {fileID: -2432090755550338912, guid: ab8843a741decab4a807be0d2c286b20, type: 3}
 --- !u!143 &-4641786227216252519
 CharacterController:
@@ -208,7 +209,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 0
   m_CollisionDetection: 0

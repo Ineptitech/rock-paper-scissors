@@ -124,7 +124,7 @@ namespace RPS
         // TODO Allow user to select network to bind to. For most people the default will be fine
         // Needs to be public so MPlayer objects can access the buffer.
         public const short PORT = 27000;
-        public static readonly IPAddress DEST = IPAddress.Parse("100.111.183.126"); // IPAddress.Broadcast
+        public static readonly IPAddress DEST = IPAddress.Parse("100.117.198.109"); // IPAddress.Broadcast
         public static UdpClient NetSock = new(new IPEndPoint(IPAddress.Any, PORT));
 
         public static short ShortAt(byte[] ba, int i)
