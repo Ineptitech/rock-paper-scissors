@@ -11,7 +11,12 @@ public class MPlayerNetworkController : MonoBehaviour
 {
     public IPEndPoint ep; // Assigned when player is spawned
 
+    [SerializeReference]
     CharacterController cc;
+
+    [SerializeReference]
+    Rigidbody rb;
+
     void Start()
     {
     }
@@ -35,9 +40,8 @@ public class MPlayerNetworkController : MonoBehaviour
 
     public void Move(Vector4 movement)
     {
-        cc.Move(Vector3.Lerp(transform.position, new (movement.x, movement.y, movement.z), Time.time % Time.deltaTime));
-
-        cc.transform.Rotate(Vector3.up, movement.w);
+        //cc.attachedRigidbody.Move(new (movement.x, movement.y, movement.z), Quaternion.Euler(0, movement.w, 0));
+        rb.Move(new(movement.x, movement.y, movement.z), Quaternion.Euler(0, movement.w, 0));
     }
     public void Move(float x, float y, float z)
     {

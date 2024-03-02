@@ -25,7 +25,7 @@ public class Collide : MonoBehaviour
     {
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"Collision with {collision.gameObject}");
 
@@ -38,7 +38,7 @@ public class Collide : MonoBehaviour
 
     public void SetTeam(Team team)
     {
-        this.currentTeam = team;
+        currentTeam = team;
         filter.mesh = meshes[(int)currentTeam];
     }
 }

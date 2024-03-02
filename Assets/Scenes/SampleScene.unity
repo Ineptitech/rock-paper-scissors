@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 157776454}
   - component: {fileID: 157776457}
   - component: {fileID: 157776456}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 2080174889}
   - component: {fileID: 2080174891}
   - component: {fileID: 2080174892}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -517,9 +517,9 @@ MonoBehaviour:
   currentTeam: 1
   filter: {fileID: 157776457}
   meshes:
+  - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   - {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
   - {fileID: -2432090755550338912, guid: ab8843a741decab4a807be0d2c286b20, type: 3}
-  - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!136 &2080174890
 CapsuleCollider:
   m_ObjectHideFlags: 0
