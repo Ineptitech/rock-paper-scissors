@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveIt : MonoBehaviour
 {
-    private const float PLAYER_SPEED = 2.5f;
+    private const float PLAYER_SPEED = 25f;
     private const float THIRD_PERSON_RANGE = 3f;
 
     [SerializeReference]
@@ -26,7 +26,7 @@ public class MoveIt : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    // Move is called once per frame
     void Update()
     {
         // Looking
@@ -43,11 +43,11 @@ public class MoveIt : MonoBehaviour
         // Walking
         Vector3 move = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         move = transform.TransformDirection(move);
-        controller.Move(PLAYER_SPEED * Time.deltaTime * move);
+        controller.SimpleMove(PLAYER_SPEED * move);
 
         // Third person camera movement
         scrolled -= Input.GetAxis("Mouse ScrollWheel");
         scrolled = Mathf.Clamp01(scrolled);
-        cam.transform.localPosition = new Vector3(0, 0, -Mathf.SmoothStep(0, THIRD_PERSON_RANGE, scrolled));
+        cam.transform.localPosition = new Vector3(0, 1, -Mathf.SmoothStep(0, THIRD_PERSON_RANGE, scrolled));
     }
 }

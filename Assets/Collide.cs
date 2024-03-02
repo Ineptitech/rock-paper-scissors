@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RPS;
 
-public class ClassCollide : MonoBehaviour
+public class Collide : MonoBehaviour
 {
-    enum Caste
-    {
-        paper = 0,
-        scissors = 1,
-        rock = 2
-    }
 
     [SerializeField]
-    Caste currentClass = Caste.paper;
+    public Team currentTeam = Team.paper;
 
     [SerializeField]
     MeshFilter filter;
@@ -22,10 +17,10 @@ public class ClassCollide : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SetTeam(currentTeam);
     }
 
-    // Update is called once per frame
+    // Move is called once per frame
     void Update()
     {
     }
@@ -34,13 +29,16 @@ public class ClassCollide : MonoBehaviour
     {
         Debug.Log($"Collision with {collision.gameObject}");
 
-        Caste colliderClass = collision.collider.GetComponent<ClassCollide>().currentClass;
+        Team colliderTeam = collision.collider.GetComponent<Collide>().currentTeam;
 
-        if ((int) colliderClass == ((int)currentClass + 1) % 3) {
-            currentClass = colliderClass;
-            filter.mesh = meshes[(int)currentClass];
+        if ((int) colliderTeam == ((int) currentTeam + 1) % 3) {
+            SetTeam(colliderTeam);
         }
+    }
 
-
+    public void SetTeam(Team team)
+    {
+        this.currentTeam = team;
+        filter.mesh = meshes[(int)currentTeam];
     }
 }
