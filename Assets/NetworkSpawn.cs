@@ -116,17 +116,7 @@ public class NetworkSpawn : MonoBehaviour
                         MPlayers[ip].SetTeam((Team)pendingFrame.packet);
                         break;
                     }
-                case PacketHeader.Change:
-                    {
-                        if (!MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
-
-
-
-                        break;
-                    }
             }
-        }
-        {
         }
     }
 }
