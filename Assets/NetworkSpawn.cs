@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class NetworkSpawn : MonoBehaviour
 {
@@ -29,7 +30,6 @@ public class NetworkSpawn : MonoBehaviour
     {
         // Broadcast start
         RPS.Network.NetSock.SendToAll((byte[]) new RPS.MPlayerStart(playerCollide.currentTeam));
-
 
         new Thread(() =>
         {
@@ -105,9 +105,15 @@ public class NetworkSpawn : MonoBehaviour
                         if (pendingFrame.packet.GetType() != typeof(Vector4)) break;
 
                         Vector4 update = (Vector4) pendingFrame.packet;
-
                         MPlayers[ip].Move(update);
 
+                        break;
+                    }
+                case PacketHeader.Change:
+                    {
+                        if (!MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
+
+                        MPlayers[ip].SetTeam((Team)pendingFrame.packet);
                         break;
                     }
                 case PacketHeader.Change:

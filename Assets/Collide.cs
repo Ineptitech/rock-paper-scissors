@@ -5,12 +5,11 @@ using RPS;
 
 public class Collide : MonoBehaviour
 {
-
-    [SerializeField]
-    public Team currentTeam = Team.paper;
-
-    [SerializeField]
+    [SerializeReference]
     MeshFilter filter;
+
+    [SerializeField]
+    public Team currentTeam;
 
     public Mesh[] meshes;
 
@@ -20,16 +19,14 @@ public class Collide : MonoBehaviour
         SetTeam(currentTeam);
     }
 
-    // Move is called once per frame
-    void Update()
-    {
-    }
-
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"Collision with {collision.gameObject}");
 
-        Team colliderTeam = collision.collider.GetComponent<Collide>().currentTeam;
+        var comp = collision.collider.GetComponent<Collide>();
+        if (comp == null) return;
+
+        Team colliderTeam = comp.currentTeam;
 
         if ((int) colliderTeam == ((int) currentTeam + 1) % 3) {
             SetTeam(colliderTeam);
@@ -40,5 +37,7 @@ public class Collide : MonoBehaviour
     {
         currentTeam = team;
         filter.mesh = meshes[(int)currentTeam];
+
+        RPS.Network.NetSock.SendToAll((byte[])new RPS.MPlayerChange(team));
     }
 }

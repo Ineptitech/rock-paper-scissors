@@ -61,14 +61,14 @@ namespace RPS
         }
         public static explicit operator byte[](MPlayerUpdate p)
         {
-            List<byte> l = new List<byte> { (byte)RPS.PacketHeader.Move };
+            List<byte> l = new List<byte> { (byte)PacketHeader.Move };
 
             // Cast to format
             short[] sCoords = {
                 (short)(p.x * SCALE), 
                 (short)(p.y * SCALE), 
                 (short)(p.z * SCALE),
-                (short) p.r 
+                (short)p.r
             };
 
             //Combine raw bytes
@@ -77,6 +77,7 @@ namespace RPS
 
             return l.ToArray();
         }
+
         public static Vector4 Decode(byte[] ba)
         {
             return new Vector4(
@@ -98,18 +99,22 @@ namespace RPS
         {
             return (Team) netdata[1];
         }
-        public static explicit operator byte[](MPlayerAck p) => new byte[] { (byte)RPS.PacketHeader.AckStart, (byte) p.team };
+        public static explicit operator byte[](MPlayerAck p) => new byte[] { (byte)RPS.PacketHeader.Start, (byte) p.team };
     }
-    public struct MPlayerChange
-    {
-        RPS.Team newTeam;
 
+    public class MPlayerChange
+    {
+        public RPS.Team newTeam;
+        public MPlayerChange(Team team)
+        {
+            this.newTeam = team;
+        }
+
+        public static implicit operator byte[](MPlayerChange p) => new byte[] { (byte)RPS.PacketHeader.Change, (byte)p.newTeam };
         public static Team Decode(byte[] netdata)
         {
             return (Team)netdata[1];
         }
-
-        public static explicit operator byte[](MPlayerChange p) => new byte[] { (byte)RPS.PacketHeader.Change, (byte)p.newTeam };
     }
 
     #endregion
@@ -119,7 +124,7 @@ namespace RPS
         // TODO Allow user to select network to bind to. For most people the default will be fine
         // Needs to be public so MPlayer objects can access the buffer.
         public const short PORT = 27000;
-        public static readonly IPAddress DEST = IPAddress.Parse("100.117.198.109"); // IPAddress.Broadcast
+        public static readonly IPAddress DEST = IPAddress.Parse("100.111.183.126"); // IPAddress.Broadcast
         public static UdpClient NetSock = new(new IPEndPoint(IPAddress.Any, PORT));
 
         public static short ShortAt(byte[] ba, int i)
