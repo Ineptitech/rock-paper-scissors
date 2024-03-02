@@ -19,7 +19,8 @@ namespace RPS
     {
         Start = 0,
         Move = 1,
-        AckStart = 2
+        AckStart = 2,
+        Change = 3
     }
 
     #region Packet Structs
@@ -49,7 +50,7 @@ namespace RPS
     // This class should store floats internally, only casting them to a short as necessary
     public class MPlayerUpdate
     {
-        public const int SCALE = 100;
+        public const float SCALE = 100;
         public float x, y, z, r;
         public MPlayerUpdate(float x, float y, float z, float r)
         {
@@ -58,23 +59,17 @@ namespace RPS
             this.z = z;
             this.r = r;
         }
-        public MPlayerUpdate(short sx, short sy, short sz, short sr)
-        {
-            x = (float) (sx / SCALE);
-            y = (float) (sy / SCALE);
-            z = (float) (sz / SCALE);
-            r = (float) (sr / SCALE);
-        }
+
         public static explicit operator byte[](MPlayerUpdate p)
         {
-            List<byte> l = new List<byte> { (byte)RPS.PacketHeader.Move };
+            List<byte> l = new List<byte> { (byte)PacketHeader.Move };
 
             // Cast to format
             short[] sCoords = {
                 (short)(p.x * SCALE), 
                 (short)(p.y * SCALE), 
                 (short)(p.z * SCALE),
-                (short)(p.r * SCALE) 
+                (short)p.r
             };
 
             //Combine raw bytes
@@ -83,12 +78,13 @@ namespace RPS
 
             return l.ToArray();
         }
+
         public static Vector4 Decode(byte[] ba)
         {
             return new Vector4(
-                (float) (Network.ShortAt(ba, 1) / MPlayerUpdate.SCALE),
-                (float) (Network.ShortAt(ba, 3) / MPlayerUpdate.SCALE),
-                (float) (Network.ShortAt(ba, 5) / MPlayerUpdate.SCALE),
+                (Network.ShortAt(ba, 1) / MPlayerUpdate.SCALE),
+                (Network.ShortAt(ba, 3) / MPlayerUpdate.SCALE),
+                (Network.ShortAt(ba, 5) / MPlayerUpdate.SCALE),
                 Network.ShortAt(ba, 7)
             );
         }
@@ -106,17 +102,21 @@ namespace RPS
         }
         public static explicit operator byte[](MPlayerAck p) => new byte[] { (byte)RPS.PacketHeader.Start, (byte) p.team };
     }
-    //public struct MPlayerChange
-    //{
-    //    RPS.Team NewCaste;
-    //    IPAddress Tagger;
-    //    public static implicit operator byte[](MPlayerChange p)
-    //    {
-    //        List<byte> l = new List<byte> { (byte)RPS.PacketHeader.Change, (byte)p.NewCaste };
-    //        l.AddRange(p.Tagger.GetAddressBytes());
-    //        return l.ToArray();
-    //    }
-    //}
+
+    public class MPlayerChange
+    {
+        public RPS.Team newTeam;
+        public MPlayerChange(Team team)
+        {
+            this.newTeam = team;
+        }
+
+        public static implicit operator byte[](MPlayerChange p) => new byte[] { (byte)RPS.PacketHeader.Change, (byte)p.newTeam };
+        public static Team Decode(byte[] netdata)
+        {
+            return (Team)netdata[1];
+        }
+    }
 
     #endregion
 
@@ -125,7 +125,7 @@ namespace RPS
         // TODO Allow user to select network to bind to. For most people the default will be fine
         // Needs to be public so MPlayer objects can access the buffer.
         public const short PORT = 27000;
-        public static readonly IPAddress DEST = IPAddress.Parse("100.117.198.109"); // IPAddress.Broadcast
+        public static readonly IPAddress DEST = IPAddress.Parse("100.111.183.126"); // IPAddress.Broadcast
         public static UdpClient NetSock = new(new IPEndPoint(IPAddress.Any, PORT));
 
         public static short ShortAt(byte[] ba, int i)

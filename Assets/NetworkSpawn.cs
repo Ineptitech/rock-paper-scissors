@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class NetworkSpawn : MonoBehaviour
 {
@@ -27,8 +28,7 @@ public class NetworkSpawn : MonoBehaviour
 
     void Start()
     {
-        //RPS.Network.NetSock.SendToAll(new RPS.MPlayerStart(Team.rock));
-
+        RPS.Network.NetSock.SendToAll((byte[])new RPS.MPlayerStart(playerCollide.currentTeam));
 
         new Thread(() =>
         {
@@ -48,6 +48,9 @@ public class NetworkSpawn : MonoBehaviour
                 if (dgram[0] == (byte)PacketHeader.Move)
                     decodedPacket = MPlayerUpdate.Decode(dgram);
 
+                if (dgram[0] == (byte)PacketHeader.Move)
+                    decodedPacket = MPlayerChange.Decode(dgram);
+
                 pendingPackets.Enqueue(
                     new PendingPacket { 
                         endPoint = mpep, 
@@ -63,7 +66,7 @@ public class NetworkSpawn : MonoBehaviour
         {
             IPAddress ip = pendingFrame.endPoint.Address;
 
-            Debug.Log($"Packet from {ip.ToString()}");
+            Debug.Log($"Packet from {ip}: {pendingFrame.packetType}");
             switch (pendingFrame.packetType)
             {
                 // In the case of Start or AckStart, we want essentially the same behavior and result -
@@ -98,12 +101,18 @@ public class NetworkSpawn : MonoBehaviour
                 case PacketHeader.Move:
                     {
                         if (!MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
-                        if (pendingFrame.packet.GetType() != typeof(Vector3)) break;
+                        if (pendingFrame.packet.GetType() != typeof(Vector4)) break;
 
                         Vector4 update = (Vector4) pendingFrame.packet;
-
                         MPlayers[ip].Move(update);
 
+                        break;
+                    }
+                case PacketHeader.Change:
+                    {
+                        if (!MPlayers.ContainsKey(ip)) break; // Dee Daws Pro Tech Shun
+
+                        MPlayers[ip].SetTeam((Team)pendingFrame.packet);
                         break;
                     }
             }

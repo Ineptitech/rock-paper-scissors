@@ -11,35 +11,25 @@ public class MPlayerNetworkController : MonoBehaviour
 {
     public IPEndPoint ep; // Assigned when player is spawned
 
-    CharacterController cc;
-    void Start()
-    {
-    }
+    [SerializeReference]
+    Rigidbody rb;
 
-    void FixedUpdate()
-    {        
-        // The values are scaled up x100 to make use of the short format. Convert back to float 
-        //GetComponent<Rigidbody>()
-        //    .Move(
-        //        new Vector3(pr.x / 100, pr.y / 100, pr.z / 100),
-        //        Quaternion.Euler(0, pr.w / 100, 0)
-        //    );
+    [SerializeReference]
+    MeshFilter filter;
 
-        // Check that we're still receiving data from this player. If not, call stop
-    }
+    [SerializeField]
+    public Team currentTeam;
 
-    void Stop() { 
-        // Discard network socket
-        
-    }
+    public Mesh[] meshes;
 
     public void Move(Vector4 movement)
     {
-        cc.Move(Vector3.Lerp(transform.position, new (movement.x, movement.y, movement.z), Time.time % Time.deltaTime));
-
-        cc.transform.Rotate(Vector3.up, movement.w);
+        rb.Move(new (movement.x, movement.y, movement.z), Quaternion.Euler(0, movement.w, 0));
     }
-    public void Move(float x, float y, float z)
+
+    public void SetTeam(Team team)
     {
+        this.currentTeam = team;
+        filter.mesh = meshes[(int)currentTeam];
     }
 }
